@@ -1,0 +1,63 @@
+model_name: vbar-tuned
+#timesteps: 200000
+timesteps: 75000
+episodes: 100
+
+train_max_steps: 2500
+bench_max_steps: 2500
+
+# NB: Classes must be referenced by name; we'll map these back in code
+train_env_kwargs:
+  wrapper_class: TimeLimitWrapper
+  n_envs: 30
+
+load_model: false
+#load_model: 'Fixed_Base_Model/vbar-agentv3-3.zip'
+#stats_path: 'Fixed_Base_Envstats/vbar-agentv3-3.pkl' 
+stats_path: false
+
+train_gym_kwargs:
+  benchmark: false
+  phase: 1
+
+bench_env_kwargs:
+  wrapper_class: TimeLimitWrapper
+  n_envs: 1
+
+bench_gym_kwargs:
+  benchmark: true
+  phase: 1
+
+ppo_kwargs:
+  gamma: 0.998
+  gae_lambda: 0.98
+  learning_rate: 0.015
+  n_steps: 500
+  ent_coef: 0.0002
+  clip_range: 0.2
+  target_kl: 0.002
+  batch_size: 1000
+  verbose: 0
+  n_epochs: 20
+  normalize_advantage: true
+  max_grad_norm: 0.2
+  use_sde: true
+  tensorboard_log: "arpod-ppo"
+  sde_sample_freq: 8
+  _init_setup_model: true
+  device: "cuda"
+
+policy_dict:
+  activation_fn: GELU
+  net_arch:
+    pi: [130,44,30]
+    vf: [145,25,5]
+  full_std: false
+  squash_output: false
+  log_std_init: -1
+  ortho_init: true
+  use_expln: true
+
+plot_trajectories: True
+plot_half_angle_deg: 20
+plot_cone_height: 200
